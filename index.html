@@ -7588,7 +7588,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span>
+<div class="highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 </div>
 </div>
@@ -7616,7 +7616,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span>
+<div class="highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 </div>
 </div>
@@ -7644,7 +7644,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span>
+<div class="highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 </div>
 </div>
@@ -7664,16 +7664,389 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#Descargo datos</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">ortools.linear_solver</span> <span class="kn">import</span> <span class="n">pywraplp</span>
+
+<span class="c1">#Llamamos al solver</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">CreateSolver</span><span class="p">(</span><span class="s1">'SCIP'</span><span class="p">)</span> <span class="c1"># Usamos SCIP</span>
+
+<span class="c1">#Parámetros</span>
+
+<span class="c1"># Leer el archivo con separación por espacio</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"centrales.txt"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">" "</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">C</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'lat'</span><span class="p">,</span> <span class="s1">'long'</span><span class="p">]</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"distancias.txt"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'all'</span><span class="p">)</span>
+<span class="n">D</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'c0'</span><span class="p">,</span> <span class="s1">'c1'</span><span class="p">,</span> <span class="s1">'c2'</span><span class="p">,</span> <span class="s1">'c3'</span><span class="p">,</span> <span class="s1">'c4'</span><span class="p">,</span> <span class="s1">'c5'</span><span class="p">,</span> <span class="s1">'c6'</span><span class="p">,</span> <span class="s1">'c7'</span><span class="p">,</span> <span class="s1">'c8'</span><span class="p">,</span> <span class="s1">'c9'</span><span class="p">]</span>
+<span class="n">O</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"oficinas.txt"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">" "</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">O</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'demanda'</span><span class="p">,</span> <span class="s1">'lat'</span><span class="p">,</span> <span class="s1">'long'</span><span class="p">]</span>
+
+
+<span class="n">CAP</span> <span class="o">=</span> <span class="mi">15000</span> <span class="c1">#Capacidad max que tiene cada central</span>
+<span class="n">F</span> <span class="o">=</span> <span class="mi">5700</span>    <span class="c1">#Costo fijo por abrir una central</span>
+<span class="n">CABLE</span> <span class="o">=</span> <span class="mf">0.017</span> <span class="c1">#Costo por metro de cable</span>
+
+<span class="c1">#Indices</span>
+<span class="n">I</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)))</span> <span class="c1">#Indices de oficinas</span>
+<span class="n">J</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)))</span> <span class="c1">#Indices de centrales</span>
+
+<span class="c1">#Variables</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># y[j] = 1 si ela central j está abierta</span>
+
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">BoolVar</span><span class="p">(</span><span class="sa">f</span><span class="s1">'y[</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">]'</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># x[i, j] = 1 si la oficina i se conecta a la central j</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">BoolVar</span><span class="p">(</span><span class="sa">f</span><span class="s1">'x[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">]'</span><span class="p">)</span>
+
+<span class="c1">#Restricciones</span>
+
+<span class="c1">#1. Cada oficina solo puede estar conectada a una central</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>  
+
+<span class="c1">#2. La demanda de las oficinas conectadas debe ser menor a la capacidad total de la central</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">O</span><span class="p">[</span><span class="s1">'demanda'</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">CAP</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="c1">#3. Una central solo debe estar abierta si tiene una oficina conectada</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="c1">#4. Binarias</span>
+<span class="c1">#Ya implemetado que las variables x e y sean binarias</span>
+
+<span class="c1">#Función objetivo</span>
+
+<span class="c1">#Sumatoria de costo total de centrales abiertas</span>
+<span class="n">costo_centrales</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Sum</span><span class="p">(</span><span class="n">F</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">)</span>
+
+<span class="c1">#Doble Sumatoria de costo de conexion entre centrales y oficinas</span>
+<span class="n">costo_distancias</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Sum</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="sa">f</span><span class="s2">"c</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">CABLE</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">)</span>
+
+<span class="n">solver</span><span class="o">.</span><span class="n">Minimize</span><span class="p">(</span><span class="n">costo_centrales</span> <span class="o">+</span> <span class="n">costo_distancias</span><span class="p">)</span>
+
+<span class="c1"># Resolver</span>
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">status</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="c1"># Verificar resultado</span>
+<span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Solución óptima encontrada."</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Valores de las variables y (centrales abiertas):"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Central </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2"> abierta: </span><span class="si">{</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Valores de las variables x (conexiones):"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Oficina </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> conectada a Central </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Valor óptimo de la función objetivo (costo total):"</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">Objective</span><span class="p">()</span><span class="o">.</span><span class="n">Value</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Tiempo de resolución: </span><span class="si">{</span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> segundos"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"No se encontró solución óptima."</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Solución óptima encontrada.
+Valores de las variables y (centrales abiertas):
+Central 0 abierta: 1.0
+Central 1 abierta: 1.0
+Central 2 abierta: 1.0
+Central 3 abierta: 0.0
+Central 4 abierta: 1.0
+Central 5 abierta: 0.0
+Central 6 abierta: 1.0
+Central 7 abierta: 0.0
+Central 8 abierta: 1.0
+Central 9 abierta: 0.0
+
+Valores de las variables x (conexiones):
+Oficina 14 conectada a Central 0
+Oficina 45 conectada a Central 0
+Oficina 46 conectada a Central 0
+Oficina 47 conectada a Central 0
+Oficina 48 conectada a Central 0
+Oficina 49 conectada a Central 0
+Oficina 50 conectada a Central 0
+Oficina 51 conectada a Central 0
+Oficina 52 conectada a Central 0
+Oficina 53 conectada a Central 0
+Oficina 0 conectada a Central 1
+Oficina 1 conectada a Central 1
+Oficina 2 conectada a Central 1
+Oficina 13 conectada a Central 1
+Oficina 15 conectada a Central 1
+Oficina 28 conectada a Central 1
+Oficina 29 conectada a Central 1
+Oficina 41 conectada a Central 1
+Oficina 42 conectada a Central 1
+Oficina 43 conectada a Central 1
+Oficina 9 conectada a Central 2
+Oficina 10 conectada a Central 2
+Oficina 17 conectada a Central 2
+Oficina 18 conectada a Central 2
+Oficina 20 conectada a Central 2
+Oficina 30 conectada a Central 2
+Oficina 31 conectada a Central 2
+Oficina 32 conectada a Central 2
+Oficina 7 conectada a Central 4
+Oficina 8 conectada a Central 4
+Oficina 16 conectada a Central 4
+Oficina 19 conectada a Central 4
+Oficina 33 conectada a Central 4
+Oficina 34 conectada a Central 4
+Oficina 35 conectada a Central 4
+Oficina 36 conectada a Central 4
+Oficina 39 conectada a Central 4
+Oficina 40 conectada a Central 4
+Oficina 3 conectada a Central 6
+Oficina 4 conectada a Central 6
+Oficina 5 conectada a Central 6
+Oficina 6 conectada a Central 6
+Oficina 25 conectada a Central 6
+Oficina 27 conectada a Central 6
+Oficina 37 conectada a Central 6
+Oficina 44 conectada a Central 6
+Oficina 54 conectada a Central 6
+Oficina 55 conectada a Central 6
+Oficina 11 conectada a Central 8
+Oficina 12 conectada a Central 8
+Oficina 21 conectada a Central 8
+Oficina 22 conectada a Central 8
+Oficina 23 conectada a Central 8
+Oficina 24 conectada a Central 8
+Oficina 26 conectada a Central 8
+Oficina 38 conectada a Central 8
+
+Valor óptimo de la función objetivo (costo total): 34549.843
+
+Tiempo de resolución: 23.6247 segundos
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#Descargo datos</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">ortools.linear_solver</span> <span class="kn">import</span> <span class="n">pywraplp</span>
+
+<span class="c1">#Llamamos al solver</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">CreateSolver</span><span class="p">(</span><span class="s1">'SCIP'</span><span class="p">)</span> <span class="c1"># Usamos SCIP</span>
+
+<span class="c1">#Parámetros</span>
+
+<span class="c1"># Leer el archivo con separación por espacio</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"centrales.txt"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">" "</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">C</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'lat'</span><span class="p">,</span> <span class="s1">'long'</span><span class="p">]</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"distancias.txt"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'all'</span><span class="p">)</span>
+<span class="n">D</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'c0'</span><span class="p">,</span> <span class="s1">'c1'</span><span class="p">,</span> <span class="s1">'c2'</span><span class="p">,</span> <span class="s1">'c3'</span><span class="p">,</span> <span class="s1">'c4'</span><span class="p">,</span> <span class="s1">'c5'</span><span class="p">,</span> <span class="s1">'c6'</span><span class="p">,</span> <span class="s1">'c7'</span><span class="p">,</span> <span class="s1">'c8'</span><span class="p">,</span> <span class="s1">'c9'</span><span class="p">]</span>
+<span class="n">O</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"oficinas.txt"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">" "</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">O</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'demanda'</span><span class="p">,</span> <span class="s1">'lat'</span><span class="p">,</span> <span class="s1">'long'</span><span class="p">]</span>
+
+
+<span class="n">CAP</span> <span class="o">=</span> <span class="mi">15000</span> <span class="c1">#Capacidad max que tiene cada central</span>
+<span class="n">F</span> <span class="o">=</span> <span class="mi">5700</span>    <span class="c1">#Costo fijo por abrir una central</span>
+<span class="n">CABLE</span> <span class="o">=</span> <span class="mf">0.017</span> <span class="c1">#Costo por metro de cable</span>
+
+<span class="c1">#Indices</span>
+<span class="n">I</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)))</span> <span class="c1">#Indices de oficinas</span>
+<span class="n">J</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)))</span> <span class="c1">#Indices de centrales</span>
+
+<span class="c1">#Variables</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># y[j] = 1 si ela central j está abierta</span>
+
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">BoolVar</span><span class="p">(</span><span class="sa">f</span><span class="s1">'y[</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">]'</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># x[i, j] = 1 si la oficina i se conecta a la central j</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">BoolVar</span><span class="p">(</span><span class="sa">f</span><span class="s1">'x[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">]'</span><span class="p">)</span>
+
+<span class="c1">#Restricciones</span>
+
+<span class="c1">#1. Cada oficina solo puede estar conectada a una central</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>  
+
+<span class="c1">#2. La demanda de las oficinas conectadas debe ser menor a la capacidad total de la central</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">O</span><span class="p">[</span><span class="s1">'demanda'</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">CAP</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="c1">#3. Una central solo debe estar abierta si tiene una oficina conectada</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="c1">#4. Binarias</span>
+<span class="c1">#Ya implemetado que las variables x e y sean binarias</span>
+
+<span class="c1">#5. Opcional: Que cada central tenga como maximo 10 oficinas conectadas </span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+
+<span class="c1">#Función objetivo</span>
+
+<span class="c1">#Sumatoria de costo total de centrales abiertas</span>
+<span class="n">costo_centrales</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Sum</span><span class="p">(</span><span class="n">F</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">)</span>
+
+<span class="c1">#Doble Sumatoria de costo de conexion entre centrales y oficinas</span>
+<span class="n">costo_distancias</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Sum</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="sa">f</span><span class="s2">"c</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">CABLE</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">)</span>
+
+<span class="n">solver</span><span class="o">.</span><span class="n">Minimize</span><span class="p">(</span><span class="n">costo_centrales</span> <span class="o">+</span> <span class="n">costo_distancias</span><span class="p">)</span>
+
+<span class="c1"># Resolver</span>
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">status</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="c1"># Verificar resultado</span>
+<span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Solución óptima encontrada."</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Valores de las variables y (centrales abiertas):"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Central </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2"> abierta: </span><span class="si">{</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Valores de las variables x (conexiones):"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">J</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Oficina </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> conectada a Central </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Valor óptimo de la función objetivo (costo total):"</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">Objective</span><span class="p">()</span><span class="o">.</span><span class="n">Value</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Tiempo de resolución: </span><span class="si">{</span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> segundos"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"No se encontró solución óptima."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Solución óptima encontrada.
+Valores de las variables y (centrales abiertas):
+Central 0 abierta: 1.0
+Central 1 abierta: 1.0
+Central 2 abierta: 1.0
+Central 3 abierta: 0.0
+Central 4 abierta: 1.0
+Central 5 abierta: 0.0
+Central 6 abierta: 1.0
+Central 7 abierta: 0.0
+Central 8 abierta: 1.0
+Central 9 abierta: 0.0
+
+Valores de las variables x (conexiones):
+Oficina 14 conectada a Central 0
+Oficina 45 conectada a Central 0
+Oficina 46 conectada a Central 0
+Oficina 47 conectada a Central 0
+Oficina 48 conectada a Central 0
+Oficina 49 conectada a Central 0
+Oficina 50 conectada a Central 0
+Oficina 51 conectada a Central 0
+Oficina 52 conectada a Central 0
+Oficina 53 conectada a Central 0
+Oficina 0 conectada a Central 1
+Oficina 1 conectada a Central 1
+Oficina 2 conectada a Central 1
+Oficina 13 conectada a Central 1
+Oficina 15 conectada a Central 1
+Oficina 28 conectada a Central 1
+Oficina 29 conectada a Central 1
+Oficina 41 conectada a Central 1
+Oficina 42 conectada a Central 1
+Oficina 43 conectada a Central 1
+Oficina 9 conectada a Central 2
+Oficina 10 conectada a Central 2
+Oficina 17 conectada a Central 2
+Oficina 18 conectada a Central 2
+Oficina 20 conectada a Central 2
+Oficina 30 conectada a Central 2
+Oficina 31 conectada a Central 2
+Oficina 32 conectada a Central 2
+Oficina 7 conectada a Central 4
+Oficina 8 conectada a Central 4
+Oficina 16 conectada a Central 4
+Oficina 19 conectada a Central 4
+Oficina 33 conectada a Central 4
+Oficina 34 conectada a Central 4
+Oficina 35 conectada a Central 4
+Oficina 36 conectada a Central 4
+Oficina 39 conectada a Central 4
+Oficina 40 conectada a Central 4
+Oficina 3 conectada a Central 6
+Oficina 4 conectada a Central 6
+Oficina 5 conectada a Central 6
+Oficina 6 conectada a Central 6
+Oficina 25 conectada a Central 6
+Oficina 27 conectada a Central 6
+Oficina 37 conectada a Central 6
+Oficina 44 conectada a Central 6
+Oficina 54 conectada a Central 6
+Oficina 55 conectada a Central 6
+Oficina 11 conectada a Central 8
+Oficina 12 conectada a Central 8
+Oficina 21 conectada a Central 8
+Oficina 22 conectada a Central 8
+Oficina 23 conectada a Central 8
+Oficina 24 conectada a Central 8
+Oficina 26 conectada a Central 8
+Oficina 38 conectada a Central 8
+
+Valor óptimo de la función objetivo (costo total): 34549.843
+
+Tiempo de resolución: 19.2808 segundos
+</pre>
 </div>
 </div>
 </div>

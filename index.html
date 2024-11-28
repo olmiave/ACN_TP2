@@ -8249,7 +8249,7 @@ Instancia: Oficinas=140, Centrales=20, Tiempo=3004.1589s, Costo=35729.56
 <p>Observaciones:</p>
 <ul>
 <li><p>Relación entre el número de oficinas y el tiempo de resolución:</p>
-<p>A medida que el número de oficinas aumenta ($|I|$), el tiempo de resolución tiende a incrementarse exponencialmente. Esto ocurre porque hay más combinaciones posibles de asignaciones de oficinas a centrales, lo que incrementa el espacio de búsqueda del solver.</p>
+<p>A medida que el número de oficinas aumenta ($|I|$), el tiempo de resolución tiende a incrementarse. Esto ocurre porque hay más combinaciones posibles de asignaciones de oficinas a centrales, lo que incrementa el espacio de búsqueda del solver.</p>
 <p>Ejemplo:</p>
 <pre><code>  - ∣I∣=20, ∣J∣=10: Tiempo = 0.0229 segundos.
   - ∣I∣=40, ∣J∣=10: Tiempo = 0.3228 segundos.
@@ -8286,8 +8286,8 @@ Instancia: Oficinas=140, Centrales=20, Tiempo=3004.1589s, Costo=35729.56
 <ul>
 <li><p>Criterio de tiempo aceptable:</p>
 <p>Si definimos que un tiempo superior a 10 minutos (600 segundos) es inaceptable, podemos observar que:</p>
-<pre><code>  - Para $∣I∣=60$ y $∣J∣=20$, el tiempo ya es inaceptable (10242.1890 segundos).
-  - Para $∣I∣≥140$, incluso con $∣J∣=20$, el tiempo sigue siendo muy alto (3004.1589 segundos).</code></pre>
+<pre><code>  - Para ∣I∣=60 y ∣J∣=20, el tiempo ya es inaceptable (10242.1890 segundos).
+  - Para ∣I∣≥140, incluso con ∣J∣=20, el tiempo sigue siendo muy alto (3004.1589 segundos).</code></pre>
 </li>
 <li><p>Tamaño crítico:</p>
 <p>Para que el tiempo de resolución sea razonable:</p>
